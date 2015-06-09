@@ -1,0 +1,26 @@
+{
+  "name": "points-tracker",
+  "version": "0.0.0",
+  "description": "A simple web app for tracking arbitrary points",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "pip install -r requirements.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://paynejacob21@github.com/paynejacob21/points-tracker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paynejacob21/points-tracker/issues"
+  },
+  "homepage": "https://github.com/paynejacob21/points-tracker#readme",
+  "dependencies": {
+    "angular2": "^2.0.0-alpha.26",
+    "bootstrap": "^3.3.4",
+    "jquery": "^2.1.4",
+    "lodash": "^3.9.3"
+  }
+}
