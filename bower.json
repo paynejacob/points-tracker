@@ -1,0 +1,25 @@
+{
+  "name": "points-tracker",
+  "version": "0.0.0",
+  "homepage": "https://github.com/paynejacob21/points-tracker",
+  "authors": [
+    "Jacob Payne <jacob.payne@vertical-knowledge.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular2": "~1.4.0",
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.4",
+    "lodash": "~3.9.3"
+  }
+}
