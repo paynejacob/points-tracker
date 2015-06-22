@@ -29,7 +29,11 @@ class Admin(object):
 
     def init_app(self, app):
         from points_tracker.auth import models as auth_models
+        from points_tracker import models as ui_models
         index_view = ProtectedAdminIndexView(name='Admin Console')
         admin = SuperAdmin(app, 'points_tracker', index_view=index_view)
         admin.register(auth_models.User, ProtectedModelView)
         admin.register(auth_models.Role, ProtectedModelView)
+        admin.register(ui_models.Audio, ProtectedModelView)
+        admin.register(ui_models.AudioTag, ProtectedModelView)
+        admin.register(ui_models.AudioGroup, ProtectedModelView)
