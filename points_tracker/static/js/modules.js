@@ -12,6 +12,7 @@
     'ngResource'
   ]);
   angular.module('points_tracker.controllers', []);
+  angular.module('points_tracker.filters', []);
   angular.module('points_tracker', [
     'components',
     'ui.bootstrap',
@@ -19,6 +20,7 @@
     'flask-assets-templates',
     'points_tracker.services',
     'points_tracker.controllers',
+    'points_tracker.filters',
     'toaster'
   ]);
 

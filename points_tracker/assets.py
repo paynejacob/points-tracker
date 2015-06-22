@@ -38,6 +38,7 @@ app_js = Bundle(
     "js/points_tracker.js",
     "js/services.js",
     "js/controllers/*.js",
+    "js/filters.js",
     "js/vendor/*.js",
     filters="jsmin",
     output="js/app.min.js"
