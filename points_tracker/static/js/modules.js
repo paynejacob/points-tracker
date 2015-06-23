@@ -17,10 +17,11 @@
     'components',
     'ui.bootstrap',
     'ui.router',
+    'ngFileUpload',
     'flask-assets-templates',
     'points_tracker.services',
-    'points_tracker.controllers',
     'points_tracker.filters',
+    'points_tracker.controllers',
     'toaster'
   ]);
 

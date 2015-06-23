@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Audio</h2>
+      <div class="col-md-12 final-report-separator mb0" />
+    </div>
+    <div class="col-md-12 text-right">
+      <div class="clearfix">
+        <div ng-if="!ctrl.readonly" class="col-xs-4 uploaded-image">
+          <div class="dropbox img-thumbnail" ngf-drop ngf-select ng-model="ctrl.tmpImages"
+            ngf-drag-over-class="dragover" ngf-multiple="true"
+            ngf-change="ctrl.uploadAudio($files, $event)"
+            ngf-allow-dir="true" ngf-accept="'.mp4,.mp3,.wav,.ogg'">
+            <div ng-if="ctrl.uploadProgress == 0 || ctrl.uploadProgress == 100" class="dropbox-inner">
+              <a class="btn btn-default">Upload Audio</a>
+            </div>
+            <div ng-if="ctrl.uploadProgress > 0 && ctrl.uploadProgress < 100">
+              <progressbar class="progress-striped" type="primary" value="ctrl.uploadProgress">
+                {{ ctrl.uploadProgress | number }}%
+              </progressbar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

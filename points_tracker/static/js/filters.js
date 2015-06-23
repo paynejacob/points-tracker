@@ -5,7 +5,7 @@
     .module('points_tracker.controllers')
     .filter('formatAudioLength', formatAudioLength)
 
-  formatAudioLength = function(){
+  function formatAudioLength(){
     return function(input){
       var mins = Math.floor(input/60);
       var sec = input-mins*60;
@@ -13,6 +13,6 @@
       mins = (mins<10) ? '0'+mins : mins
       return mins+':'+sec;
     };
-  };
+  }
   
 })();

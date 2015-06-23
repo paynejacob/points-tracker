@@ -40,7 +40,7 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 13
     ASSETS_DEBUG = False
     ADMIN_ENABLED = True
-
+    ALLOWED_EXTENSIONS = set(['wav', 'mp3', 'mp4', 'ogg'])
 
 class ProdConfig(Config):
     """Production configuration."""
@@ -54,7 +54,7 @@ class DevConfig(Config):
     DEBUG = True
 
     # Uncomment this line to debug javascript/css assets
-    # ASSETS_DEBUG = True
+    ASSETS_DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:password@localhost/points_tracker'
 
     # Ease up on password requirements in dev to allow simple testing
@@ -63,6 +63,7 @@ class DevConfig(Config):
     PASSWORD_REQUIRE_UPPER = False
     PASSWORD_REQUIRE_LOWER = False
     PASSWORD_REQUIRE_NUMBER = False
+    UPLOAD_FOLDER = os.path.abspath(os.path.join(Config.PROJECT_ROOT, 'var/uploads'))
 
 class TestConfig(Config):
     TESTING = True

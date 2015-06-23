@@ -3,15 +3,17 @@
 
   angular
     .module('points_tracker.controllers')
-    .controller('AudiListCtrl', AudiListCtrl)
+    .controller('AudioListCtrl', AudioListCtrl)
 
-  AudiListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout'];
+  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout', '$modal', 'Upload'];
 
-  function AudiListCtrl($scope, toaster, $log, $http, $timeout) {
+  function AudioListCtrl($scope, toaster, $log, $http, $timeout, $modal, Upload) {
     var self = this;
 
     self.searchQuery='';
     self.playing=0;
+    self.uploadProgress = 0;
+    self.audio = []
 
     self.playAudio = function(id, length){
       $http.post(
@@ -19,30 +21,41 @@
         {}
       )
       .error(function(error){
-        console.error('audio failed to play: '+error);
+        $log.error('audio failed to play: '+error);
         self.playing='error';
       })
       .success(function(audio){
-        console.log('played');
+        $log.log('played');
         self.playing=id;
-        console.log(length);
+        $log.log(length);
         $timeout(function(){self.playing=0;}, length*1000+500);
       });
     };
 
     self.getAudioList = function(){
-      console.log('called');
-      $http.post(
+      $log.log('called');
+      $http.get(
         '/files/'+self.searchQuery,
         {}
       )
       .error(function(error){
-        console.error('Fetch audio list failed: '+error);
+        $log.error('Fetch audio list failed: '+error);
       })
       .success(function(audio){
         self.audio = audio;
       });
     };
+
+
+    self.openAudioUploadModal = function(){
+      $modal.open({
+        templateUrl: '/static/partials/widgets/upload-audio-modal.html',
+        size: 'lg',
+        controller: 'UploadAudioCtrl',
+        controllerAs: 'ctrl'
+      });
+    };
+
   }
 
 })();

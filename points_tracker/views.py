@@ -2,6 +2,7 @@
 """Main UI section."""
 from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
 from flask.ext.login import login_required, current_user
+from werkzeug import secure_filename
 
 from . import utils
 
@@ -23,6 +24,7 @@ def dashboard():
 
 
 @blueprint.route('/play/<audio_id>', methods=['POST'])
+@login_required
 def playfile(audio_id):
     a = Audio.query.filter_by(id=audio_id).one()
 
@@ -31,8 +33,9 @@ def playfile(audio_id):
     return 'done'
 
 
-@blueprint.route('/files/', defaults={'search_query': None}, methods=['POST'])
-@blueprint.route('/files/<search_query>', methods=['POST'])
+@blueprint.route('/files/', defaults={'search_query': None}, methods=['GET'])
+@blueprint.route('/files/<search_query>', methods=['GET'])
+@login_required
 def files(search_query):
 
     if search_query:
@@ -63,3 +66,21 @@ def files(search_query):
         } for a in audio]
 
     return Response(response=json.dumps(files))
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in current_app.config.ALLOWED_EXTENSIONS
+
+@blueprint.route("/files/", methods=["POST"])
+@login_required
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            Audio.create(
+                filename=filename,
+                name=request.form['name'],
+                lenth=42)
+    return Response(response=json.dumps({}))
