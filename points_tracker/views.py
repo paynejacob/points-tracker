@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
+import os, json 
 from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename
@@ -69,7 +70,7 @@ def files(search_query):
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in current_app.config.ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
 
 @blueprint.route("/files/", methods=["POST"])
 @login_required
@@ -78,9 +79,11 @@ def upload_file():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename), 'w') as disk_file:
+                pass
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             Audio.create(
                 filename=filename,
-                name=request.form['name'],
-                lenth=42)
+                name=filename,
+                length=42)
     return Response(response=json.dumps({}))

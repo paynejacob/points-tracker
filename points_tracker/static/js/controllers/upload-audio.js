@@ -5,9 +5,9 @@
     .module('points_tracker.controllers')
     .controller('UploadAudioCtrl', UploadAudioCtrl)
 
-  UploadAudioCtrl.$inject = ['$scope', 'toaster', '$log', '$modalInstance', 'Upload'];
+  UploadAudioCtrl.$inject = ['$scope', 'toaster', '$log', 'Upload'];
 
-  function UploadAudioCtrl($scope, toaster, $log, $modalInstance, Upload) {
+  function UploadAudioCtrl($scope, toaster, $log, Upload) {
     var self = this;
 
     self.uploadProgress = 0;
@@ -21,10 +21,10 @@
             file: file
           }).then(
             function(data, status, headers, config) {
-              $modalInstance.close();
+              $scope.close();
               toaster.pop("success", "Your upload was received successfully.");
             }, function(reply, status, headers){
-              $modalInstance.close();
+              $scope.close();
               $log.error("error uploading audio", reply, status, headers);
             }, function(evt) {
               // Only let it go to 99 until we're done refreshing report at end...
