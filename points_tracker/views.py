@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
-import os, json 
+import os, json, md5
 from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename
@@ -39,7 +39,7 @@ def playfile(audio_id):
 @login_required
 def files(search_query):
 
-    if search_query:
+    if search_query == None:
         audio = Audio.query.limit(10)
     else:
         tags = AudioTag.query.filter(AudioTag.tag.in_([term.upper() for term in search_query.split(' ')])).all()
@@ -78,12 +78,15 @@ def upload_file():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            filename, extension = os.path.splitext(file.filename)
+            print extension
+            filenamehash = md5.new(secure_filename(filename)).hexdigest()
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename), 'w') as disk_file:
                 pass
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             Audio.create(
-                filename=filename,
+                filename=filenamehash+extension,
                 name=filename,
                 length=42)
+            # create tags from filename
     return Response(response=json.dumps({}))

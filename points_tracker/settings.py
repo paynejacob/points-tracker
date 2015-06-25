@@ -63,7 +63,7 @@ class DevConfig(Config):
     PASSWORD_REQUIRE_UPPER = False
     PASSWORD_REQUIRE_LOWER = False
     PASSWORD_REQUIRE_NUMBER = False
-    UPLOAD_FOLDER = os.path.abspath(os.path.join(Config.PROJECT_ROOT, 'var/uploads'))
+    UPLOAD_FOLDER = os.path.abspath(os.path.join(Config.PROJECT_ROOT, 'points_tracker/static/audio'))
 
 class TestConfig(Config):
     TESTING = True
