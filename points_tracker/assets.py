@@ -9,13 +9,13 @@ vendor_css = Bundle(
     "libs/bootswatch-dist/css/bootstrap.min.css",
     "libs/angularjs-toaster/toaster.min.css",
     filters="cssmin",
-    output="css/vendor.min.css"
+    output="vendor.min.css"
 )
 
 app_css = Bundle(
     "css/style.scss",
     filters=["pyscss", "cssmin"],
-    output="css/app.min.css"
+    output="app.min.css"
 )
 
 vendor_js = Bundle(
@@ -31,7 +31,7 @@ vendor_js = Bundle(
     "libs/angularjs-toaster/toaster.min.js",
     "libs/ng-file-upload/ng-file-upload-all.min.js",
     filters='jsmin',
-    output="js/vendor.min.js"
+    output="vendor.min.js"
 )
 
 app_js = Bundle(
@@ -42,14 +42,14 @@ app_js = Bundle(
     "js/filters.js",
     "js/vendor/*.js",
     filters="jsmin",
-    output="js/app.min.js"
+    output="app.min.js"
 )
 
 angular_templates_js = Bundle(
     "partials/*.html",
     "partials/widgets/*.html",
     filters='angulartemplatecache',
-    output="js/partials.min.js"
+    output="partials.min.js"
 )
 
 assets = Environment()

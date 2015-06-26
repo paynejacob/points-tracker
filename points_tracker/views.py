@@ -29,7 +29,7 @@ def dashboard():
 def playfile(audio_id):
     a = Audio.query.filter_by(id=audio_id).one()
 
-    audio = pyglet.media.StaticSource(pyglet.media.load('audio_files/'+a.filename))
+    audio = pyglet.media.StaticSource(pyglet.media.load('static/audio/'+a.filename))
     audio.play()
     return 'done'
 
@@ -83,7 +83,7 @@ def upload_file():
             filenamehash = md5.new(secure_filename(filename)).hexdigest()
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename), 'w') as disk_file:
                 pass
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash))
             Audio.create(
                 filename=filenamehash+extension,
                 name=filename,
