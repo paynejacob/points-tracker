@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="input-group input-group-lg">
-          <span ng-click="ctrl.openAudioUploadModal()" class="input-group-addon"><i class="fa fa-plus"></i></span>
+          <span onclick="location='/#/audio-upload'" class="input-group-addon"><i class="fa fa-upload"></i></span>
           <input ng-model="ctrl.searchQuery"
           ng-keyup="ctrl.getAudioList()"
           ng-model-options="{ debounce: 500 }"
