@@ -20,6 +20,10 @@
       .state('audio-list', {
         url: '/audio-list',
         templateUrl: '/static/partials/audio-list.html',
+      })
+      .state('audio-upload', {
+        url: '/audio-upload',
+        templateUrl: '/static/partials/upload-audio.html',
       });
 
     // Don't strip trailing slashes from calculated URLs

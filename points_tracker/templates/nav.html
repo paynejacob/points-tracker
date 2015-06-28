@@ -18,6 +18,9 @@
       {% if not (current_user and current_user.is_authenticated()) %}
         <li><a href="{{ url_for('auth.login') }}">Login</a></li>
       {% else %}
+      <li>
+        <a href="/#/audio-list" title="audio list"><i class="fa fa-music fa-lg"></i></a>
+      </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="Settings"><i class="fa fa-cog fa-lg"></i></a>
           <ul class="settings-menu dropdown-menu" role="menu">

@@ -16,6 +16,7 @@
     self.audio = []
 
     self.playAudio = function(id, length){
+      console.log('called');
       $http.post(
         '/play/'+id,
         {}
@@ -33,7 +34,6 @@
     };
 
     self.getAudioList = function(){
-      $log.log('called');
       $http.get(
         '/files/'+self.searchQuery,
         {}
@@ -45,18 +45,5 @@
         self.audio = audio;
       });
     };
-
-
-    self.openAudioUploadModal = function(){
-      $modal.open({
-        templateUrl: '/static/partials/widgets/upload-audio-modal.html',
-        size: 'lg',
-        controller: 'UploadAudioCtrl',
-        controllerAs: 'ctrl'
-      });
-    };
-
   }
-
 })();
-
