@@ -28,3 +28,4 @@ node_modules
 
 points_tracker/static/libs
 *.pyc
+var/uploads/*
