@@ -6,7 +6,7 @@ class Audio(SurrogatePK, Model):
     __tablename__ = 'audio'
     name = Column(db.String(50), unique=False)
     length = Column(db.Integer, unique=False)  #stored in seconds
-    filename = Column(db.String(37), unique=False)
+    filename = Column(db.String(37), unique=True)
 
     def __repr__(self):
         return '<Audio %r>' % (self.name)

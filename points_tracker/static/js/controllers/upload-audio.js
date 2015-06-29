@@ -3,38 +3,38 @@
 
   angular
     .module('points_tracker.controllers')
-    .controller('UploadAudioCtrl', UploadAudioCtrl)
+    .controller('AudioUploadCtrl', AudioUploadCtrl)
 
-  UploadAudioCtrl.$inject = ['$scope', 'toaster', '$log', 'Upload', '$modalInstance'];
+  AudioUploadCtrl.$inject = ['$scope', 'toaster', '$log', 'Upload'];
 
-  function UploadAudioCtrl($scope, toaster, $log, Upload, $modalInstance) {
+  function AudioUploadCtrl($scope, toaster, $log, Upload) {
     var self = this;
 
     self.uploadProgress = 0;
+    self.filename='';
+    self.tags ='';
+    self.audiofile=false;
 
-    self.uploadAudio = function(files, event) {
-      if (files && files.length > 0) {
-        _.each(files, function(file) {
-          Upload.upload({
-            url: '/files/',
-            fields: {type: 'audio'},
-            file: file
-          }).then(
-            function(data, status, headers, config) {
-              $modalInstance.close();
-              toaster.pop("success", "Your upload was received successfully.");
-            }, function(reply, status, headers){
-              $modalInstance.close();
-              $log.error("error uploading audio", reply, status, headers);
-            }, function(evt) {
-              // Only let it go to 99 until we're done refreshing report at end...
-              self.uploadProgress = Math.min(parseInt(100.0 * evt.loaded / evt.total), 99);
-            });
-        });
+    self.uploadAudio = function(file, event) {
+      if (file[0]) {
+        Upload.upload({
+          url: '/files/',
+          fields: {type: 'audio'},
+          file: file[0]
+        }).then(
+          function(data, status, headers, config) {
+            toaster.pop("success", "Your upload was received successfully.");
+          }, function(reply, status, headers){
+            $log.error("error uploading audio", reply, status, headers);
+          }, function(evt) {
+            self.uploadProgress = Math.min(parseInt(100.0 * evt.loaded / evt.total), 100);
+            self.filename = file[0].name
+          });
       }
     };
 
+    self.setAudioInfo = function(){
+      
+    }
   }
-
 })();
-

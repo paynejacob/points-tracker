@@ -79,14 +79,12 @@ def upload_file():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename, extension = os.path.splitext(file.filename)
-            print extension
             filenamehash = md5.new(secure_filename(filename)).hexdigest()
-            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename), 'w') as disk_file:
+            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension), 'w') as disk_file:
                 pass
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash))
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension))
+        else:
             Audio.create(
                 filename=filenamehash+extension,
-                name=filename,
-                length=42)
-            # create tags from filename
+                length=15)
     return Response(response=json.dumps({}))
