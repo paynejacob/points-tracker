@@ -9,6 +9,7 @@ from . import utils
 
 from points_tracker.auth import role_required
 from models import Audio, AudioTag
+import pyglet
 
 blueprint = Blueprint('main', __name__, static_folder="../static")
 
@@ -76,15 +77,20 @@ def allowed_file(filename):
 @login_required
 def upload_file():
     if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename, extension = os.path.splitext(file.filename)
-            filenamehash = md5.new(secure_filename(filename)).hexdigest()
-            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension), 'w') as disk_file:
-                pass
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension))
+        if request.files:
+            file = request.files['file']
+            if allowed_file(file.filename):
+                filename, extension = os.path.splitext(file.filename)
+                filenamehash = md5.new(secure_filename(filename)).hexdigest()
+                with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension), 'w') as disk_file:
+                    pass
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension))
+                return Response(response=filenamehash+extension)
         else:
+            post = request.get_json()
+            print post
             Audio.create(
-                filename=filenamehash+extension,
-                length=15)
+                name= post.get('audioName'),
+                filename= post.get('audioFileName'),
+                length= 0)
     return Response(response=json.dumps({}))

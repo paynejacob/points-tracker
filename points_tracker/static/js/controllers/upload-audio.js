@@ -5,36 +5,39 @@
     .module('points_tracker.controllers')
     .controller('AudioUploadCtrl', AudioUploadCtrl)
 
-  AudioUploadCtrl.$inject = ['$scope', 'toaster', '$log', 'Upload'];
+  AudioUploadCtrl.$inject = ['$scope', 'toaster', '$log', 'FileUploader', '$http'];
 
-  function AudioUploadCtrl($scope, toaster, $log, Upload) {
+  function AudioUploadCtrl($scope, toaster, $log, FileUploader, $http) {
     var self = this;
 
-    self.uploadProgress = 0;
-    self.filename='';
-    self.tags ='';
-    self.audiofile=false;
+    $scope.master = {tags:"", name:""};
+    $scope.audio = angular.copy($scope.master);
+    $scope.uploader = $scope.uploader = new FileUploader({
+            url: '/files/'
+        });
+    $scope.uploading = false;
 
-    self.uploadAudio = function(file, event) {
-      if (file[0]) {
-        Upload.upload({
-          url: '/files/',
-          fields: {type: 'audio'},
-          file: file[0]
-        }).then(
-          function(data, status, headers, config) {
-            toaster.pop("success", "Your upload was received successfully.");
-          }, function(reply, status, headers){
-            $log.error("error uploading audio", reply, status, headers);
-          }, function(evt) {
-            self.uploadProgress = Math.min(parseInt(100.0 * evt.loaded / evt.total), 100);
-            self.filename = file[0].name
-          });
+    $scope.submit = function(audio) {
+      if($scope.audioUploadForm.$valid){
+        if($scope.uploader.queue.length === 0){
+          toaster.pop('error', "Audio File", "The audio file is required");
+          return
+        }
+        $scope.uploading = true;
+        $scope.uploader.uploadAll();
+        $scope.uploader.onCompleteAll = function() {
+            $http({
+              url: '/files/',
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              data: JSON.stringify({
+                audioName: audio.name,
+                audioTags: audio.tags,
+                audioFileName: '410dac82c3bc360ac8737268555953d5.mp3'
+            })})
+        };
       }
+      $scope.master = angular.copy(audio);
     };
-
-    self.setAudioInfo = function(){
-      
-    }
   }
 })();

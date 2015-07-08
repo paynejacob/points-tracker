@@ -5,9 +5,9 @@
     .module('points_tracker.controllers')
     .controller('AudioListCtrl', AudioListCtrl)
 
-  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout', '$modal', 'Upload'];
+  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout'];
 
-  function AudioListCtrl($scope, toaster, $log, $http, $timeout, $modal, Upload) {
+  function AudioListCtrl($scope, toaster, $log, $http, $timeout) {
     var self = this;
 
     self.searchQuery='';
@@ -45,5 +45,8 @@
         self.audio = audio;
       });
     };
+    angular.element(document).ready(function () {
+        self.getAudioList();
+    });
   }
 })();
