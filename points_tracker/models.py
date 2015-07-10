@@ -19,12 +19,3 @@ class AudioTag(SurrogatePK, Model):
 
     def __repr__(self):
         return '<Tag %r>' % (self.tag)
-
-
-class AudioGroup(SurrogatePK, Model):
-    __tablename__ = 'audio_groups'
-    name = Column(db.String(50), unique=False)
-    audio = Column(db.Integer, db.ForeignKey("audio.id"), nullable=False)
-
-    def __repr__(self):
-        return '<Group %r>' % (self.name)

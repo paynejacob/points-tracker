@@ -24,17 +24,17 @@
           return
         }
         $scope.uploading = true;
+        $scope.uploader.onBeforeUploadItem = function(item) {
+            //append form data to request
+            item.formData.push({
+              audioName: audio.name,
+              audioTags: audio.tags
+            })
+            console.info('onBeforeUploadItem', item);
+        };
         $scope.uploader.uploadAll();
-        $scope.uploader.onCompleteAll = function() {
-            $http({
-              url: '/files/',
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              data: JSON.stringify({
-                audioName: audio.name,
-                audioTags: audio.tags,
-                audioFileName: '410dac82c3bc360ac8737268555953d5.mp3'
-            })})
+        $scope.uploader.onCompleteAll = function(value) {
+          return
         };
       }
       $scope.master = angular.copy(audio);

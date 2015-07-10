@@ -34,10 +34,11 @@
     };
 
     self.getAudioList = function(){
-      $http.get(
-        '/files/'+self.searchQuery,
-        {}
-      )
+      $http({
+        url: '/files/'+self.searchQuery,
+        method: 'GET',
+        params: {limit: 20}
+      })
       .error(function(error){
         $log.error('Fetch audio list failed: '+error);
       })
