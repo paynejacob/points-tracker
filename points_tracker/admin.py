@@ -36,4 +36,3 @@ class Admin(object):
         admin.register(auth_models.Role, ProtectedModelView)
         admin.register(ui_models.Audio, ProtectedModelView)
         admin.register(ui_models.AudioTag, ProtectedModelView)
-        admin.register(ui_models.AudioGroup, ProtectedModelView)

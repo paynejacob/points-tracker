@@ -17,7 +17,7 @@
     'components',
     'ui.bootstrap',
     'ui.router',
-    'ngFileUpload',
+    'angularFileUpload',
     'flask-assets-templates',
     'points_tracker.services',
     'points_tracker.filters',

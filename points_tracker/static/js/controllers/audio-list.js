@@ -5,9 +5,9 @@
     .module('points_tracker.controllers')
     .controller('AudioListCtrl', AudioListCtrl)
 
-  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout', '$modal', 'Upload'];
+  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout'];
 
-  function AudioListCtrl($scope, toaster, $log, $http, $timeout, $modal, Upload) {
+  function AudioListCtrl($scope, toaster, $log, $http, $timeout) {
     var self = this;
 
     self.searchQuery='';
@@ -34,10 +34,11 @@
     };
 
     self.getAudioList = function(){
-      $http.get(
-        '/files/'+self.searchQuery,
-        {}
-      )
+      $http({
+        url: '/files/'+self.searchQuery,
+        method: 'GET',
+        params: {limit: 20}
+      })
       .error(function(error){
         $log.error('Fetch audio list failed: '+error);
       })
@@ -45,5 +46,8 @@
         self.audio = audio;
       });
     };
+    angular.element(document).ready(function () {
+        self.getAudioList();
+    });
   }
 })();

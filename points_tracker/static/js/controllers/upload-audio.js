@@ -3,38 +3,41 @@
 
   angular
     .module('points_tracker.controllers')
-    .controller('UploadAudioCtrl', UploadAudioCtrl)
+    .controller('AudioUploadCtrl', AudioUploadCtrl)
 
-  UploadAudioCtrl.$inject = ['$scope', 'toaster', '$log', 'Upload', '$modalInstance'];
+  AudioUploadCtrl.$inject = ['$scope', 'toaster', '$log', 'FileUploader', '$http'];
 
-  function UploadAudioCtrl($scope, toaster, $log, Upload, $modalInstance) {
+  function AudioUploadCtrl($scope, toaster, $log, FileUploader, $http) {
     var self = this;
 
-    self.uploadProgress = 0;
-
-    self.uploadAudio = function(files, event) {
-      if (files && files.length > 0) {
-        _.each(files, function(file) {
-          Upload.upload({
-            url: '/files/',
-            fields: {type: 'audio'},
-            file: file
-          }).then(
-            function(data, status, headers, config) {
-              $modalInstance.close();
-              toaster.pop("success", "Your upload was received successfully.");
-            }, function(reply, status, headers){
-              $modalInstance.close();
-              $log.error("error uploading audio", reply, status, headers);
-            }, function(evt) {
-              // Only let it go to 99 until we're done refreshing report at end...
-              self.uploadProgress = Math.min(parseInt(100.0 * evt.loaded / evt.total), 99);
-            });
+    $scope.master = {tags:"", name:""};
+    $scope.audio = angular.copy($scope.master);
+    $scope.uploader = $scope.uploader = new FileUploader({
+            url: '/files/'
         });
+    $scope.uploading = false;
+
+    $scope.submit = function(audio) {
+      if($scope.audioUploadForm.$valid){
+        if($scope.uploader.queue.length === 0){
+          toaster.pop('error', "Audio File", "The audio file is required");
+          return
+        }
+        $scope.uploading = true;
+        $scope.uploader.onBeforeUploadItem = function(item) {
+            //append form data to request
+            item.formData.push({
+              audioName: audio.name,
+              audioTags: audio.tags
+            })
+            console.info('onBeforeUploadItem', item);
+        };
+        $scope.uploader.uploadAll();
+        $scope.uploader.onCompleteAll = function(value) {
+          return
+        };
       }
+      $scope.master = angular.copy(audio);
     };
-
   }
-
 })();
-

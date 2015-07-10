@@ -29,7 +29,7 @@ vendor_js = Bundle(
     "libs/lodash/lodash.min.js",
     "libs/moment/min/moment.min.js",
     "libs/angularjs-toaster/toaster.min.js",
-    "libs/ng-file-upload/ng-file-upload-all.min.js",
+    "libs/angular-file-upload/angular-file-upload.min.js",
     filters='jsmin',
     output="vendor.min.js"
 )
