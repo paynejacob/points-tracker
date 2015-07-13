@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
 import pyglet
-import pyglet
-pyglet.lib.load_library('avbin')
-pyglet.have_avbin=True
 from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
+from pydub import AudioSegment
 from mutagen.apev2 import APEv2
 from models import Audio, AudioTag
 from werkzeug import secure_filename
@@ -82,24 +80,28 @@ def upload_file():
                 #save file to disk
                 filename, extension = os.path.splitext(file.filename)
                 filenamehash = md5.new(secure_filename(filename)).hexdigest()
-                filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash+extension)
+                filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash)
                 with open(filepath, 'w') as disk_file:
                     pass
                 file.save(filepath)
 
                 if extension == ".mp3":
                     length = int(round(MP3(filepath).info.length))
+                    sound = AudioSegment.from_mp3(filepath)
+                    sound.export(filepath, format="wav")
                 elif extension == ".mp4":
                     length = int(round(MP4(filepath).info.length))
+                    sound = AudioSegment.from_file(filepath)
+                    sound.export(filepath, format="wav")
                 elif extension == ".wav":
-                    length = int(round(APEv2(filepath).info.length))
+                    length = 0
                 else:
                     length = 0
 
                 #create the db record of the file
                 audio = Audio.create(
                         name= request.form['audioName'],
-                        filename= filenamehash+extension,
+                        filename= filenamehash,
                         length= length)
                 # add the tags
                 tags = [AudioTag.create(tag=tag, audio=audio.id) for tag in (request.form['audioName']+' '+request.form['audioTags']).upper().split()]
