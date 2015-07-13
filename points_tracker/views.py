@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
 import pyglet
+pyglet.have_avbin=True
 from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
