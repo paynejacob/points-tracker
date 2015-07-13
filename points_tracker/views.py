@@ -87,11 +87,11 @@ def upload_file():
                     pass
                 file.save(filepath)
 
-                if extension == ".mp3" and False:
+                if extension == ".mp3":
                     length = int(round(MP3(filepath).info.length))
-                elif extension == ".mp4" and False:
+                elif extension == ".mp4":
                     length = int(round(MP4(filepath).info.length))
-                elif extension == ".wav" and False:
+                elif extension == ".wav":
                     length = int(round(APEv2(filepath).info.length))
                 else:
                     length = 0
