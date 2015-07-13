@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
 import pyglet
+import pyglet
+pyglet.lib.load_library('avbin')
 pyglet.have_avbin=True
 from . import utils
 import os, json, md5
