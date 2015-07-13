@@ -1,0 +1,13 @@
+web:
+  build: .
+  ports:
+   - "5000:5000"
+  volumes:
+   - .:a/app
+
+postgres:
+  image: postgres:latest
+  ports:
+    - 5423:5423
+  environment:
+    POSTGRES_PASSWORD: password
