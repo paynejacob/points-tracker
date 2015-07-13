@@ -13,6 +13,9 @@ from points_tracker.auth import role_required
 from flask.ext.login import login_required, current_user
 from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
 
+#use alsa
+pyglet.options['audio'] = ('alsa')
+
 blueprint = Blueprint('main', __name__, static_folder="../static")
 
 ###
