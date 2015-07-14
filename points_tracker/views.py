@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
-import wave
-import pyaudio
+
+# \
+#  \    O
+#  _\|  |  }
+#    M_/|\_|}
+#       |  }
+#      / \
+#    _/   \_
+import app
+import threading
 from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
@@ -33,32 +41,10 @@ def dashboard():
 def playfile(audio_id):
 
     a = Audio.query.filter_by(id=audio_id).one()
-    #define stream chunk
-    chunk = 1024
 
-    #open a wav format music
-    f = wave.open(os.path.join(current_app.config['UPLOAD_FOLDER'], a.filename),"rb")
-    #instantiate PyAudio
-    p = pyaudio.PyAudio()
-    #open stream
-    stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
-                    channels = f.getnchannels(),
-                    rate = f.getframerate(),
-                    output = True)
-    #read data
-    data = f.readframes(chunk)
+    audioThread = threading.Thread(target=app.playaudionserver, args=[os.path.join(current_app.config['UPLOAD_FOLDER'], a.filename)])
+    audioThread.start()
 
-    #paly stream
-    while data != '':
-        stream.write(data)
-        data = f.readframes(chunk)
-
-    #stop stream
-    stream.stop_stream()
-    stream.close()
-
-    #close PyAudio
-    p.terminate()
     return 'done'
 
 

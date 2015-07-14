@@ -11,6 +11,9 @@ from points_tracker.auth import views as auth_views
 
 from points_tracker.settings import ProdConfig
 
+import wave
+import pyaudio
+
 def create_app(config_object=ProdConfig):
     """An application factory, as explained here:
         http://flask.pocoo.org/docs/patterns/appfactories/
@@ -49,3 +52,32 @@ def register_errorhandlers(app):
         return render_template("{0}.html".format(error_code)), error_code
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
+
+def playaudionserver(filepath):
+    print 'playing: '+filepath
+    #define stream chunk
+    chunk = 1024
+
+    #open a wav format music
+    f = wave.open(filepath ,"rb")
+    #instantiate PyAudio
+    p= pyaudio.PyAudio()
+    #open stream
+    stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
+                    channels = f.getnchannels(),
+                    rate = f.getframerate(),
+                    output = True)
+    #read data
+    data = f.readframes(chunk)
+
+    #paly stream
+    while data != '':
+        stream.write(data)
+        data = f.readframes(chunk)
+
+    #stop stream
+    stream.stop_stream()
+    stream.close()
+
+    #close PyAudio
+    p.terminate()
