@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template, got_request_exception
+from flask import Flask, render_template, got_request_exception, g
 
 from points_tracker.assets import assets
 from points_tracker.extensions import (
@@ -81,3 +81,5 @@ def playaudionserver(filepath):
 
     #close PyAudio
     p.terminate()
+
+    g.threads.remove(self)

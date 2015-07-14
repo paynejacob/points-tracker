@@ -20,9 +20,11 @@ from models import Audio, AudioTag
 from werkzeug import secure_filename
 from points_tracker.auth import role_required
 from flask.ext.login import login_required, current_user
-from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
+from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app, g
 
 blueprint = Blueprint('main', __name__, static_folder="../static")
+
+g.threads = []
 
 ###
 ### The UI application is driven by AngularJS, so a single server-driven
@@ -44,7 +46,7 @@ def playfile(audio_id):
 
     audioThread = threading.Thread(target=app.playaudionserver, args=[os.path.join(current_app.config['UPLOAD_FOLDER'], a.filename)])
     audioThread.start()
-
+    g.threads.append(audioThread)
     return 'done'
 
 
