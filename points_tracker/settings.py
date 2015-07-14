@@ -54,7 +54,7 @@ class DevConfig(Config):
     DEBUG = True
 
     # Uncomment this line to debug javascript/css assets
-    ASSETS_DEBUG = True
+    # ASSETS_DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:password@localhost/points_tracker'
 
     # Ease up on password requirements in dev to allow simple testing
