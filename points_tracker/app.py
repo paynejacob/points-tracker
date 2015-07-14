@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template, got_request_exception, g
+from flask import Flask, render_template, got_request_exception
 
 from points_tracker.assets import assets
 from points_tracker.extensions import (
@@ -10,9 +10,6 @@ from points_tracker import views, models
 from points_tracker.auth import views as auth_views
 
 from points_tracker.settings import ProdConfig
-
-import wave
-import pyaudio
 
 def create_app(config_object=ProdConfig):
     """An application factory, as explained here:
@@ -52,34 +49,3 @@ def register_errorhandlers(app):
         return render_template("{0}.html".format(error_code)), error_code
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
-
-def playaudionserver(filepath):
-    print 'playing: '+filepath
-    #define stream chunk
-    chunk = 1024
-
-    #open a wav format music
-    f = wave.open(filepath ,"rb")
-    #instantiate PyAudio
-    p= pyaudio.PyAudio()
-    #open stream
-    stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
-                    channels = f.getnchannels(),
-                    rate = f.getframerate(),
-                    output = True)
-    #read data
-    data = f.readframes(chunk)
-
-    #paly stream
-    while data != '':
-        stream.write(data)
-        data = f.readframes(chunk)
-
-    #stop stream
-    stream.stop_stream()
-    stream.close()
-
-    #close PyAudio
-    p.terminate()
-
-    g.threads.remove(self)

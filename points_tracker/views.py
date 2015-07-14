@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
-
-# \
-#  \    O
-#  _\|  |  }
-#    M_/|\_|}
-#       |  }
-#      / \
-#    _/   \_
-import app
-import threading
+import wave
+import pyaudio
 from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
@@ -20,11 +12,9 @@ from models import Audio, AudioTag
 from werkzeug import secure_filename
 from points_tracker.auth import role_required
 from flask.ext.login import login_required, current_user
-from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app, g
+from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
 
 blueprint = Blueprint('main', __name__, static_folder="../static")
-
-g.threads = []
 
 ###
 ### The UI application is driven by AngularJS, so a single server-driven
@@ -43,10 +33,32 @@ def dashboard():
 def playfile(audio_id):
 
     a = Audio.query.filter_by(id=audio_id).one()
+    #define stream chunk
+    chunk = 1024
 
-    audioThread = threading.Thread(target=app.playaudionserver, args=[os.path.join(current_app.config['UPLOAD_FOLDER'], a.filename)])
-    audioThread.start()
-    g.threads.append(audioThread)
+    #open a wav format music
+    f = wave.open(os.path.join(current_app.config['UPLOAD_FOLDER'], a.filename),"rb")
+    #instantiate PyAudio
+    p = pyaudio.PyAudio()
+    #open stream
+    stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
+                    channels = f.getnchannels(),
+                    rate = f.getframerate(),
+                    output = True)
+    #read data
+    data = f.readframes(chunk)
+
+    #paly stream
+    while data != '':
+        stream.write(data)
+        data = f.readframes(chunk)
+
+    #stop stream
+    stream.stop_stream()
+    stream.close()
+
+    #close PyAudio
+    p.terminate()
     return 'done'
 
 
