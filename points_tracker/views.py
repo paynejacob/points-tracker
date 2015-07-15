@@ -82,7 +82,7 @@ def files(search_query):
             priority[tag.audio] +=1
 
         prioritized_ids = sorted(priority.items(), key=lambda x: x[1], reverse=True)
-        audio = Audio.query.filter(Audio.id.in_([pid[0] for pid in prioritized_ids[:request.args.get('limit')]])).all()
+        audio = Audio.query.filter(Audio.id.in_([pid[0] for pid in prioritized_ids[:int(request.args.get('limit'))]])).all()
 
     return Response(response=json.dumps([{
             'id': a.id,
