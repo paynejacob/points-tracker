@@ -55,6 +55,32 @@ def create_user():
     User.create(username=user, password=p1, active=True, is_admin=True)
     print 'Administrator account created for {}'.format(user)
 
+@manager.command
+def normalize_audio_files():
+    import wave
+    import contextlib
+    from pydub import AudioSegment
+
+    #get all files
+    print 'Querying file list...'
+    audiofiles = Audio.query.all()
+
+    print 'Processing '+str(len(audiofiles))+' files...'
+
+    for audiofile in audiofiles:
+
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], audiofile.filename)
+
+        wavfile = AudioSegment.from_wav(filepath)                                 #load the file
+        wavfile = wavfile + -(wavfile.dBFS - app.config['AUDIO_DB_LEVEL'])        #level the file
+        wavfile = wavfile[:app.config['MAX_AUDIO_DURATION']]                      #trim the file
+        wavfile.export(filepath, "wav")                                           #save changes to disk
+
+        audiofile.length = wavfile.duration_seconds
+        audiofile.save()                                                          #update record
+
+    print 'done.'
+
 
 manager.add_command('server', Server(threaded=True))
 manager.add_command('shell', Shell(make_context=_make_context))

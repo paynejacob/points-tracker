@@ -65,6 +65,9 @@ class DevConfig(Config):
     PASSWORD_REQUIRE_NUMBER = False
     UPLOAD_FOLDER = os.path.abspath(os.path.join(Config.PROJECT_ROOT, 'points_tracker/static/audio'))
 
+    AUDIO_DB_LEVEL = -21.9297220851 #after this setting is changed you should run normalize_audio_files from manage.py
+    MAX_AUDIO_DURATION = 15*1000 #this is in ms
+
 class TestConfig(Config):
     TESTING = True
     DEBUG = True
