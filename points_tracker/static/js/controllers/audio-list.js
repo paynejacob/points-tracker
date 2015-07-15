@@ -37,7 +37,7 @@
       $http({
         url: '/files/'+self.searchQuery,
         method: 'GET',
-        params: {limit: 20}
+        params: {limit: 10000}
       })
       .error(function(error){
         $log.error('Fetch audio list failed: '+error);
