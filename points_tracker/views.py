@@ -126,6 +126,6 @@ def upload_file():
                         length= audiofile.duration_seconds)
 
                 # add the tags
-                tags = [AudioTag.create(tag=tag, audio=audio.id) for tag in (request.form['audioName']+','+request.form['audioTags']).upper().split(',')]
+                tags = [AudioTag.create(tag=tag, audio_id=audio.id) for tag in (request.form['audioName']+','+request.form['audioTags']).upper().split(',')]
 
     return Response(response=json.dumps({}))
