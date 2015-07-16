@@ -71,7 +71,10 @@ def files(search_query):
     if search_query == None:
         audio = Audio.query.all()
     else:
-        tags = AudioTag.query.filter(AudioTag.tag.like("%{}%".format(search_query.upper()))).all()
+        if "," in search_query:
+            tags = AudioTag.query.filter(AudioTag.tag.in_([term.strip().upper() for term in search_query.split(',')])).all()
+        else:
+            tags = AudioTag.query.filter(AudioTag.tag.like("%{}%".format(search_query.upper()))).all()
         audio_ids = [tag.audio_id for tag in tags]
 
         priority = {}

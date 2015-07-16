@@ -10,7 +10,7 @@ class Audio(SurrogatePK, Model):
 
     @property
     def tag_display(self):
-        return ",".join([tag.tag.lower() for tag in self.tags])
+        return ", ".join([tag.tag.lower() for tag in self.tags if not tag.tag == self.name.upper()])
     
     def to_json(self):
         return dict(
