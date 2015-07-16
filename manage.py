@@ -65,7 +65,7 @@ def normalize_audio_files():
     print 'Querying file list...'
     audiofiles = Audio.query.all()
 
-    print 'Processing '+str(len(audiofiles))+' files...'
+    print 'Processing {0} files...'.format(len(audiofiles))
 
     for audiofile in audiofiles:
 
@@ -73,7 +73,7 @@ def normalize_audio_files():
 
         wavfile = AudioSegment.from_wav(filepath)                                 #load the file
         wavfile = wavfile + -(wavfile.dBFS - app.config['AUDIO_DB_LEVEL'])        #level the file
-        wavfile = wavfile[:app.config['MAX_AUDIO_DURATION']]                      #trim the file
+        wavfile = wavfile[:app.config['MAX_AUDIO_DURATION_MS']]                   #trim the file
         wavfile.export(filepath, "wav")                                           #save changes to disk
 
         audiofile.length = wavfile.duration_seconds
