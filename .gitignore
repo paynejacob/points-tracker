@@ -28,6 +28,8 @@ node_modules
 
 env
 points_tracker/static/app.min.css
+points_tracker/static/app.min.js
+points_tracker/static/partials.min.js
 points_tracker/static/audio/*
 *.pyc
 var/uploads/*
