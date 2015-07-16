@@ -72,8 +72,8 @@ def normalize_audio_files():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], audiofile.filename)
 
         wavfile = AudioSegment.from_wav(filepath)                                 #load the file
-        wavfile = wavfile + -(wavfile.dBFS - app.config['AUDIO_DB_LEVEL'])        #level the file
         wavfile = wavfile[:app.config['MAX_AUDIO_DURATION_MS']]                   #trim the file
+        wavfile = wavfile + -(wavfile.dBFS - app.config['AUDIO_DB_LEVEL'])        #level the file
         wavfile.export(filepath, "wav")                                           #save changes to disk
 
         audiofile.length = wavfile.duration_seconds

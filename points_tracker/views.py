@@ -7,7 +7,7 @@ from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
-from pydub import AudioSegment
+    
 from mutagen.apev2 import APEv2
 from models import Audio, AudioTag
 from werkzeug import secure_filename
@@ -71,25 +71,20 @@ def files(search_query):
     if search_query == None:
         audio = Audio.query.all()
     else:
-        tags = AudioTag.query.filter(AudioTag.tag.in_([term.upper() for term in search_query.split(' ')])).all()
-        audio_ids = [tag.audio for tag in tags]
+        if "," in search_query:
+            tags = AudioTag.query.filter(AudioTag.tag.in_([term.strip().upper() for term in search_query.split(',')])).all()
+        else:
+            tags = AudioTag.query.filter(AudioTag.tag.like("%{}%".format(search_query.upper()))).all()
+        audio_ids = [tag.audio_id for tag in tags]
 
         priority = {}
-        for audio_id in audio_ids:
-            if audio_id not in priority:
-                priority[audio_id] = 0
-
         for tag in tags:
-            priority[tag.audio] +=1
+            priority[tag.audio_id] = priority.setdefault(tag.audio_id, 0) + 1
 
         prioritized_ids = sorted(priority.items(), key=lambda x: x[1], reverse=True)
         audio = Audio.query.filter(Audio.id.in_([pid[0] for pid in prioritized_ids])).all()
 
-    return Response(response=json.dumps([{
-            'id': a.id,
-            'name': a.name,
-            'length': a.length
-        } for a in audio]))
+    return Response(response=json.dumps([a.to_json() for a in audio]))
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -108,10 +103,10 @@ def upload_file():
                 filename, extension = os.path.splitext(file.filename)
                 filenamehash = md5.new(secure_filename(filename)).hexdigest()
                 filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filenamehash)
+
                 with open(filepath, 'w') as disk_file:
                     pass
                 file.save(filepath)
-
                 #load the file
                 if extension == ".mp3":
                     audiofile = AudioSegment.from_mp3(filepath)
@@ -120,8 +115,8 @@ def upload_file():
                 else:
                     audiofile = AudioSegment.from_file(filepath, extension[1:])
 
-                audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
                 audiofile = audiofile[:current_app.config['MAX_AUDIO_DURATION_MS']]                 #trim the file
+                audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
                 audiofile.export(filepath, "wav")                                                   #save our changes to disk
 
                 #create the db record of the file
@@ -131,6 +126,6 @@ def upload_file():
                         length= audiofile.duration_seconds)
 
                 # add the tags
-                tags = [AudioTag.create(tag=tag, audio=audio.id) for tag in (request.form['audioName']+' '+request.form['audioTags']).upper().split()]
+                tags = [AudioTag.create(tag=tag, audio=audio.id) for tag in (request.form['audioName']+','+request.form['audioTags']).upper().split(',')]
 
     return Response(response=json.dumps({}))
