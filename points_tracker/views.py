@@ -120,8 +120,8 @@ def upload_file():
                 else:
                     audiofile = AudioSegment.from_file(filepath, extension[1:])
 
-                audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
                 audiofile = audiofile[:current_app.config['MAX_AUDIO_DURATION_MS']]                 #trim the file
+                audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
                 audiofile.export(filepath, "wav")                                                   #save our changes to disk
 
                 #create the db record of the file
