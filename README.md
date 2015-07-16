@@ -5,8 +5,9 @@ An simple web app for tracking arbitrary points
 # requires bower command
     npm install -g bower-cli
 # virtualenv reccomended
-# requires postgres and user (see settings)
+# requires postgres, portaudio and user (see settings)
     brew install postgres
+    brew install portaudio
 # actual setup
     export APP_ENV="dev"
     pip install -r requirements.txt
