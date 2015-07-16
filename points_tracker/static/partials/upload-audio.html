@@ -1,4 +1,4 @@
-<div ng-controller="AudioUploadCtrl">
+<div ng-controller="AudioUploadCtrl as ctrl">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -7,27 +7,27 @@
     </div>
     <div class="row">
       <div class="well well-lg">
-        <form novalidate name="audioUploadForm">
+        <form novalidate name="ctrl.audioUploadForm">
           <div class="form-group">
             <label>File Name</label>
-            <input name="audioName" ng-model="audio.name" type="text" class="form-control" required>
+            <input name="audioName" ng-model="ctrl.audio.name" type="text" class="form-control" required>
           </div>
           <div class="form-group">
             <label>Tags</label>
-            <textarea ng-model="audio.tags" class="form-control" rows="5"></textarea>
+            <textarea placeholder="comma separated list" ng-model="ctrl.audio.tags" class="form-control" rows="5"></textarea>
           </div>
           <div class="form-group">
             <label>Audio File</label>
-            <input name="audioFile" ng-model="audio.file" type="file" nv-file-select="" uploader="uploader" ng-hide="uploader.queue.length >0" />
-            <div ng-hide="uploading" ng-if="uploader.queue[0]" class="alert alert-info" role="alert">{{ uploader.queue[0].file.name }} <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" ng-click="uploader.queue[0].remove(); ">&times;</span></button></div>
+            <input name="audioFile" ng-model="ctrl.audio.file" type="file" nv-file-select="" uploader="ctrl.uploader" ng-hide="ctrl.uploader.queue.length >0" />
+            <div ng-hide="ctrl.uploading" ng-if="ctrl.uploader.queue[0]" class="alert alert-info" role="alert">{{ ctrl.uploader.queue[0].file.name }} <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" ng-click="ctrl.uploader.queue[0].remove(); ">&times;</span></button></div>
           </div>
-          <div class="progress" style="" ng-show="uploading">
-            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">Uploading {{ uploader.queue[0].file.name }} ({{uploader.progress}}%)</div>
+          <div class="progress" style="" ng-show="ctrl.uploading">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">Uploading {{ ctrl.uploader.queue[0].file.name }} ({{ctrl.uploader.progress}}%)</div>
           </div>
           <div class="clearfix">
             <div class="form-group pull-right">
-              <button class="btn btn-default">Cancel</button>
-              <button class="btn btn-default" ng-click="submit(audio)">submit</button>
+              <a href="/#/audio-list" class="btn btn-default">Cancel</a>
+              <button class="btn btn-info" ng-click="ctrl.submit(audio)">submit</button>
             </div>
           </div>
         </form>
