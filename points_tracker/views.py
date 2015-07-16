@@ -2,6 +2,7 @@
 """Main UI section."""
 import wave
 import pyaudio
+import contextlib
 from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
@@ -68,7 +69,7 @@ def playfile(audio_id):
 def files(search_query):
 
     if search_query == None:
-        audio = Audio.query.limit(request.args.get('limit'))
+        audio = Audio.query.all()
     else:
         tags = AudioTag.query.filter(AudioTag.tag.in_([term.upper() for term in search_query.split(' ')])).all()
         audio_ids = [tag.audio for tag in tags]
@@ -82,7 +83,7 @@ def files(search_query):
             priority[tag.audio] +=1
 
         prioritized_ids = sorted(priority.items(), key=lambda x: x[1], reverse=True)
-        audio = Audio.query.filter(Audio.id.in_([pid[0] for pid in prioritized_ids[:int(request.args.get('limit'))]])).all()
+        audio = Audio.query.filter(Audio.id.in_([pid[0] for pid in prioritized_ids])).all()
 
     return Response(response=json.dumps([{
             'id': a.id,
@@ -111,24 +112,24 @@ def upload_file():
                     pass
                 file.save(filepath)
 
+                #load the file
                 if extension == ".mp3":
-                    length = int(round(MP3(filepath).info.length))
-                    sound = AudioSegment.from_mp3(filepath)
-                    sound.export(filepath, format="wav")
-                elif extension == ".mp4":
-                    length = int(round(MP4(filepath).info.length))
-                    sound = AudioSegment.from_file(filepath)
-                    sound.export(filepath, format="wav")
+                    audiofile = AudioSegment.from_mp3(filepath)
                 elif extension == ".wav":
-                    length = 0
+                    audiofile = AudioSegment.from_wav(filepath)
                 else:
-                    length = 0
+                    audiofile = AudioSegment.from_file(filepath)
+
+                audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
+                audiofile = audiofile[:current_app.config['MAX_AUDIO_DURATION']]                    #trim the file
+                audiofile.export(filepath, "wav")                                                   #save our changes to disk
 
                 #create the db record of the file
                 audio = Audio.create(
                         name= request.form['audioName'],
                         filename= filenamehash,
-                        length= length)
+                        length= audiofile.duration_seconds)
+
                 # add the tags
                 tags = [AudioTag.create(tag=tag, audio=audio.id) for tag in (request.form['audioName']+' '+request.form['audioTags']).upper().split()]
 
