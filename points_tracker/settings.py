@@ -52,7 +52,7 @@ class DevConfig(Config):
     """Development configuration."""
     ENV = 'dev'
     DEBUG = True
-
+    ASSETS_DEBUG = True
     # Uncomment this line to debug javascript/css assets
     # ASSETS_DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:password@localhost/points_tracker'

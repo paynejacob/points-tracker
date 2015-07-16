@@ -5,49 +5,62 @@
     .module('points_tracker.controllers')
     .controller('AudioListCtrl', AudioListCtrl)
 
-  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout'];
+  AudioListCtrl.$inject = ['$scope', 'toaster', '$log', '$http', '$timeout', 'Audio'];
 
-  function AudioListCtrl($scope, toaster, $log, $http, $timeout) {
+  function AudioListCtrl($scope, toaster, $log, $http, $timeout, Audio) {
     var self = this;
 
-    self.searchQuery='';
-    self.playing=0;
+    self.searchQuery = '';
+    self.playing = false;
+    self.loading = true;
     self.uploadProgress = 0;
     self.audio = []
 
-    self.playAudio = function(id, length){
-      console.log('called');
-      $http.post(
-        '/play/'+id,
-        {}
-      )
-      .error(function(error){
-        $log.error('audio failed to play: '+error);
-        self.playing='error';
-      })
-      .success(function(audio){
-        $log.log('played');
-        self.playing=id;
-        $log.log(length);
-        $timeout(function(){self.playing=0;}, length*1000+500);
-      });
+    self.playAudio = function(audio){
+      if(self.playing) return;
+      self.playing = audio;
+      Audio.play(
+        audio,
+        function(payload){
+          $timeout(function(){
+            self.playing=false;
+          }, audio.length*1000);
+        },
+        function(error){
+          $log.error('audio failed to play: '+error);
+          toaster.pop('error', 'Your audio failed to play');
+          self.playing=false;
+        });
     };
 
     self.getAudioList = function(){
-      $http({
-        url: '/files/'+self.searchQuery,
-        method: 'GET',
-        params: {limit: 10000}
-      })
-      .error(function(error){
-        $log.error('Fetch audio list failed: '+error);
-      })
-      .success(function(audio){
-        self.audio = audio;
-      });
+      Audio.query({query: self.searchQuery},
+        function(payload){
+          self.audio = payload;
+          self.loading = false;
+        },
+        function(error){
+          $log.error('Fetch audio list failed: '+error);
+          self.loading = false;
+        });
     };
-    angular.element(document).ready(function () {
-        self.getAudioList();
-    });
+    self.getAudioList();
+
+   $scope.$watch(
+      function() {
+        return self.searchQuery;
+      },
+      function(newVal, oldVal) {
+        if (newVal==oldVal) { return; }
+        audioQueryDebounced();
+      },
+      true
+    );
+
+    var audioQueryDebounced = _.debounce(function() {
+      self.loading = true;
+      self.getAudioList()
+    }, 1000);
   }
+
 })();
