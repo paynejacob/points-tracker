@@ -104,7 +104,6 @@ def upload_file():
                 with open(filepath, 'w') as disk_file:
                     pass
                 file.save(filepath)
-                print filepath
                 #load the file
                 if extension == ".mp3":
                     audiofile = AudioSegment.from_mp3(filepath)
