@@ -7,7 +7,7 @@ from . import utils
 import os, json, md5
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
-    
+from pydub import AudioSegment
 from mutagen.apev2 import APEv2
 from models import Audio, AudioTag
 from werkzeug import secure_filename
