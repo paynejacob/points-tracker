@@ -107,14 +107,8 @@ def upload_file():
                 with open(filepath, 'w') as disk_file:
                     pass
                 file.save(filepath)
-                #load the file
-                if extension == ".mp3":
-                    audiofile = AudioSegment.from_mp3(filepath)
-                elif extension == ".wav":
-                    audiofile = AudioSegment.from_wav(filepath)
-                else:
-                    audiofile = AudioSegment.from_file(filepath, extension[1:])
 
+                audiofile = AudioSegment.from_file(filepath, extension[1:])                         #load the file
                 audiofile = audiofile[:current_app.config['MAX_AUDIO_DURATION_MS']]                 #trim the file
                 audiofile = audiofile + -(audiofile.dBFS - current_app.config['AUDIO_DB_LEVEL'])    #level the file
                 audiofile.export(filepath, "wav")                                                   #save our changes to disk
