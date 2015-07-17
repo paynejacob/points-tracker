@@ -24,7 +24,7 @@
         function(payload){
           $timeout(function(){
             self.playing=false;
-          }, audio.length*1000);
+          }, audio.length * 1000 - 500);
         },
         function(error){
           $log.error('audio failed to play: '+error);

@@ -26,7 +26,7 @@ blueprint = Blueprint('main', __name__, static_folder="../static")
 @login_required
 def dashboard():
     context = {}
-    return render_template("dashboard.html", **context)
+    return render_template("points-tracker.html", **context)
 
 
 @blueprint.route('/play/<audio_id>', methods=['POST'])
