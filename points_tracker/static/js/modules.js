@@ -22,7 +22,8 @@
     'points_tracker.services',
     'points_tracker.filters',
     'points_tracker.controllers',
-    'toaster'
+    'toaster',
+    'hue'
   ]);
 
 })();

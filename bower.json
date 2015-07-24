@@ -31,7 +31,8 @@
     "font-awesome": "~4.3.0",
     "angularjs-toaster": "~0.4.14",
     "angular-animate": "~1.4.1",
-    "angular-file-upload": "~1.1.5"
+    "angular-file-upload": "~1.1.5",
+    "angular-hue-service": "~1.0.2"
   },
   "resolutions": {
     "angular": "~1.2.11"

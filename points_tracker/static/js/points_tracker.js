@@ -11,7 +11,7 @@
   function PointsConfig($stateProvider, $urlRouterProvider, $resourceProvider) {
     $urlRouterProvider.otherwise("/");
 
-    // Normal analyst states
+    // Normal user states
     $stateProvider
       .state('dashboard', {
         url: '/',
@@ -21,6 +21,10 @@
         url: '/audio-list',
         templateUrl: '/static/partials/audio-list.html',
       })
+      .state('lights', {
+        url: '/lights',
+        templateUrl: '/static/partials/lights.html',
+      })
       .state('audio-upload', {
         url: '/audio-upload',
         templateUrl: '/static/partials/upload-audio.html',
@@ -28,7 +32,6 @@
 
     // Don't strip trailing slashes from calculated URLs
     $resourceProvider.defaults.stripTrailingSlashes = false;
-
   }
 
   PointsRun.$inject = ['$rootScope'];

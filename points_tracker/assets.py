@@ -30,6 +30,7 @@ vendor_js = Bundle(
     "libs/moment/min/moment.min.js",
     "libs/angularjs-toaster/toaster.min.js",
     "libs/angular-file-upload/angular-file-upload.min.js",
+    "libs/angular-hue-service/dist/hue-service.min.js",
     filters='jsmin',
     output="vendor.min.js"
 )
