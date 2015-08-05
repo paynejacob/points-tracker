@@ -72,7 +72,10 @@
 {% assets "app_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
-{% block js %}{% endblock %}
+{% block js %}{% endblock %} 
+<script type="text/javascript">
+  window.HUE = {{hue_settings|safe}};
+</script>
 <!-- end scripts -->
 {% endblock %}
 </body>

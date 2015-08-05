@@ -34,3 +34,4 @@ points_tracker/static/audio/*
 *.pyc
 var/uploads/*
 points_tracker/static/.webassets-cache
+points_tracker/hue.py

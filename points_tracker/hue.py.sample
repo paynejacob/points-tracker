@@ -1,0 +1,6 @@
+
+    
+hue_settings = {
+    "username": "my username",
+    "bridgeIP": "bride ip",
+}

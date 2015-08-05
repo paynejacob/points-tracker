@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
+import os, json, md5
 import wave
 import pyaudio
 import contextlib
-from . import utils
-import os, json, md5
+
+from . import utils, hue
+from .models import Audio, AudioTag
+
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
-from pydub import AudioSegment
 from mutagen.apev2 import APEv2
-from models import Audio, AudioTag
+
+from pydub import AudioSegment
 from werkzeug import secure_filename
 from points_tracker.auth import role_required
 from flask.ext.login import login_required, current_user
@@ -25,7 +28,9 @@ blueprint = Blueprint('main', __name__, static_folder="../static")
 @blueprint.route("/", methods=["GET"])
 @login_required
 def dashboard():
-    context = {}
+    context = {
+        'hue_settings': json.dumps(hue.hue_settings)
+    }
     return render_template("points-tracker.html", **context)
 
 
