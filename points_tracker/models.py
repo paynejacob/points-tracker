@@ -10,14 +10,14 @@ class Audio(SurrogatePK, Model):
 
     @property
     def tag_display(self):
-        return ", ".join([tag.tag.lower() for tag in self.tags if not tag.tag == self.name.upper()])
+        return ", ".join([tag.tag.lower() 
+            for tag in self.tags if not tag.tag == self.name.upper()])
     
     def to_json(self):
-        return dict(
-            id=self.id,
-            name=self.name,
-            length=self.length,
-            tags=self.tag_display)
+        return dict(id=self.id,
+                    name=self.name,
+                    length=self.length,
+                    tags=self.tag_display)
 
     def __repr__(self):
         return '<Audio %r>' % (self.name)

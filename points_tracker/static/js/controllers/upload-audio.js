@@ -24,6 +24,7 @@
           return
         }
         self.uploading = true;
+        
         self.uploader.onBeforeUploadItem = function(item) {
             //append form data to request
             item.formData.push({
@@ -32,11 +33,26 @@
             })
             $log.info('onBeforeUploadItem', item);
         };
+        
         self.uploader.uploadAll();
-        self.uploader.onCompleteAll = function(value) {
+        
+        self.uploader.onCompleteAll = function() {
+          if(self.error) return;
           $state.go('audio-list');
           $log.info("audio file uploaded",value);
           toaster.pop('success', "Your file has been added");
+        };
+
+        self.uploader.onErrorItem = function(item, response, status, headers){
+
+          $log.error("Error: item failed to upload", item);
+          toaster.pop('error', 'Your file failed to upload');
+          self.error = true;
+          self.uploading = false;
+        };
+
+        self.uploader.onCancelItem = function(item, response, status, headers) {
+          self.uploading = false;
         };
       }
       self.master = angular.copy(audio);
