@@ -68,6 +68,12 @@ class DevConfig(Config):
     AUDIO_DB_LEVEL = -21.9297220851 #after this setting is changed you should run normalize_audio_files from manage.py
     MAX_AUDIO_DURATION_MS = 15*1000 #this is in ms
 
+    APP_URL = 'localhost:5000'
+
+    PLAY_ON_SONOS = True
+    SONOS_IP = '10.10.110.32'
+    SONOS_VOLUME = 50
+
 class TestConfig(Config):
     TESTING = True
     DEBUG = True

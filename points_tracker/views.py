@@ -5,6 +5,7 @@ import pyaudio
 import contextlib
 from . import utils
 import os, json, md5
+from soco import SoCo
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
 from pydub import AudioSegment
@@ -13,7 +14,7 @@ from models import Audio, AudioTag
 from werkzeug import secure_filename
 from points_tracker.auth import role_required
 from flask.ext.login import login_required, current_user
-from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app
+from flask import Blueprint, Response, render_template, flash, url_for, redirect, request, current_app, send_file
 
 blueprint = Blueprint('main', __name__, static_folder="../static")
 
@@ -28,12 +29,34 @@ def dashboard():
     context = {}
     return render_template("points-tracker.html", **context)
 
+@blueprint.route('/get_audio_file/<audio_id>', methods=['GET'])
+def get_audio_file(audio_id):
+
+    audio_id = audio_id.replace('.wav', '')
+
+    return send_file(
+     current_app.config['UPLOAD_FOLDER']+'/'+audio_id,
+     mimetype="audio/wav",
+     attachment_filename=audio_id+".wav")
 
 @blueprint.route('/play/<audio_id>', methods=['POST'])
 @login_required
 def playfile(audio_id):
 
     a = Audio.query.filter_by(id=audio_id).one()
+
+    if(current_app.config['PLAY_ON_SONOS']):
+        sonos = SoCo(current_app.config['SONOS_IP'])
+
+        #get sonos current state before making changes
+        volume = sonos.volume
+
+        track = sonos.get_current_track_info()
+        sonos.volume = current_app.config['SONOS_VOLUME']
+        sonos.play_uri(current_app.config['APP_URL']+'/get_audio_file/'+a.filename+'.wav')
+
+        return 'done'
+
     #define stream chunk
     chunk = 1024
 
