@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Main UI section."""
 import wave
-import pyaudio
 import contextlib
 from . import utils
 import os, json, md5
